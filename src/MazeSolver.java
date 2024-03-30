@@ -4,7 +4,8 @@
  * @version 03/10/2023
  */
 
-import java.util.ArrayList;
+import java.util.*;
+import java.util.Queue;
 
 public class MazeSolver {
     private Maze maze;
@@ -28,8 +29,21 @@ public class MazeSolver {
      */
     public ArrayList<MazeCell> getSolution() {
         // TODO: Get the solution from the maze
-        // Should be from start to end cells
-        return null;
+        ArrayList<MazeCell> backtrack = new ArrayList<MazeCell>();
+        MazeCell currentCell = maze.getEndCell();
+        while (currentCell != maze.getStartCell())
+        {
+            backtrack.add(currentCell.getParent());
+            currentCell = currentCell.getParent();
+
+        }
+        // Reverses the list and returns.
+        ArrayList<MazeCell> temp = new ArrayList<MazeCell>();
+        for (int i = backtrack.size() - 1; i >= 0; i--)
+        {
+            temp.add(backtrack.get(i));
+        }
+        return temp;
     }
 
     /**
@@ -38,8 +52,43 @@ public class MazeSolver {
      */
     public ArrayList<MazeCell> solveMazeDFS() {
         // TODO: Use DFS to solve the maze
-        // Explore the cells in the order: NORTH, EAST, SOUTH, WEST
-        return null;
+        Stack<MazeCell>  eligible = new Stack<MazeCell>();
+        MazeCell currentCell = maze.getStartCell();
+
+        while (currentCell != maze.getEndCell()) {
+            currentCell.setExplored(true);
+            // Explore the cells in the order: NORTH, EAST, SOUTH, WEST.
+            // If the cell is valud, then add it to the stack of elibigle cells.
+            // Also sets the parents appropriately.
+            if (maze.isValidCell(currentCell.getRow() -1, currentCell.getCol())) {
+                MazeCell temp = maze.getCell(currentCell.getRow() - 1, currentCell.getCol());
+                eligible.add(temp);
+                temp.setParent(currentCell);
+            }
+            if (maze.isValidCell(currentCell.getRow(), currentCell.getCol() + 1))
+            {
+                MazeCell temp = maze.getCell(currentCell.getRow(), currentCell.getCol() + 1);
+                eligible.add(temp);
+                temp.setParent(currentCell);
+            }
+            if (maze.isValidCell(currentCell.getRow() + 1, currentCell.getCol()))
+            {
+                MazeCell temp= maze.getCell(currentCell.getRow() + 1, currentCell.getCol());
+                eligible.add(temp);
+                temp.setParent(currentCell);
+            }
+            if (maze.isValidCell(currentCell.getRow(), currentCell.getCol() - 1))
+            {
+                MazeCell temp = maze.getCell(currentCell.getRow(), currentCell.getCol() - 1);
+                eligible.add(temp);
+                temp.setParent(currentCell);
+            }
+            // Increment currentCell
+            currentCell = eligible.pop();
+
+
+        }
+        return getSolution();
     }
 
     /**
@@ -47,9 +96,42 @@ public class MazeSolver {
      * @return An ArrayList of MazeCells in order from the start to end cell
      */
     public ArrayList<MazeCell> solveMazeBFS() {
+
+
         // TODO: Use BFS to solve the maze
-        // Explore the cells in the order: NORTH, EAST, SOUTH, WEST
-        return null;
+        Queue<MazeCell> eligible = new LinkedList<MazeCell>();
+        MazeCell currentCell = maze.getStartCell();
+        while (currentCell != maze.getEndCell())
+        {
+            // Similar checks to DFS, but use of a LinkedList instead.
+            currentCell.setExplored(true);
+            if (maze.isValidCell(currentCell.getRow() -1, currentCell.getCol())) {
+                MazeCell temp = maze.getCell(currentCell.getRow() - 1, currentCell.getCol());
+                eligible.add(temp);
+                temp.setParent(currentCell);
+            }
+            if (maze.isValidCell(currentCell.getRow(), currentCell.getCol() + 1))
+            {
+                MazeCell temp = maze.getCell(currentCell.getRow(), currentCell.getCol() + 1);
+                eligible.add(temp);
+                temp.setParent(currentCell);
+            }
+            if (maze.isValidCell(currentCell.getRow() + 1, currentCell.getCol()))
+            {
+                MazeCell temp= maze.getCell(currentCell.getRow() + 1, currentCell.getCol());
+                eligible.add(temp);
+                temp.setParent(currentCell);
+            }
+            if (maze.isValidCell(currentCell.getRow(), currentCell.getCol() - 1))
+            {
+                MazeCell temp = maze.getCell(currentCell.getRow(), currentCell.getCol() - 1);
+                eligible.add(temp);
+                temp.setParent(currentCell);
+            }
+            currentCell = eligible.remove();
+
+        }
+        return getSolution();
     }
 
     public static void main(String[] args) {

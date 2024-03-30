@@ -13,7 +13,17 @@ public class Maze {
     private MazeCell[][] mazeGrid;
     private MazeCell startCell;
     private MazeCell endCell;
+
+    public int getNumRows() {
+        return numRows;
+    }
+
     private int numRows;
+
+    public int getNumCols() {
+        return numCols;
+    }
+
     private int numCols;
 
     public Maze(String filename) {
@@ -131,6 +141,8 @@ public class Maze {
         return this.startCell;
     }
 
+
+
     public MazeCell getEndCell() {
         return this.endCell;
     }
@@ -147,6 +159,18 @@ public class Maze {
      */
     public boolean isValidCell(int row, int col) {
         // TODO: Complete this function
+        // Checks to avoid out of bounds errors
+        if (row < 0 || col < 0 || row >= this.getNumRows() || col >= this.getNumCols())
+        {
+            return false;
+        }
+        // Valid to visit if it is not a wall, and hasn't been explored before
+        if (mazeGrid[row][col].isExplored() == true || mazeGrid[row][col].isWall() == true)
+        {
+            return false;
+        }
         return true;
     }
+
+
 }
